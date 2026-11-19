@@ -15,9 +15,7 @@ Feature: Route defect and wear claims to warranty
       And the bike has <claim_type>
       And evidence of the bike's condition has been submitted
       When the claim is assessed
-      # TODO: Confirm that defect and wear claims initially use the "Damage" category.
-      Then the claim category is "Damage"
-      # TODO: Clarify how defect and wear are identified and which evidence is required.
+      Then the claim category is "Defect or wear"
       # Assumption: This scenario checks the reported result only;
       # diagnosis and evidence-verification methods are outside its scope.
       And the evidence check confirms that the bike has "<claim_type>"

@@ -7,8 +7,8 @@ damage, defect and wear claims.
 
 | File | Purpose |
 | --- | --- |
-| [intake_checks.feature](features/intake_checks.feature) | Check claim existence, contract validity and the insured bike |
-| [theft_claim.feature](features/theft_claim.feature) | Reject theft claims or approve them and record later recovery |
+| [intake.feature](features/intake.feature) | Check claim existence, contract validity and the insured bike |
+| [theft_claim.feature](features/theft_claim.feature) | Reject or approve theft claims and record later recovery |
 | [damage_claim.feature](features/damage_claim.feature) | Check partial payment and total loss |
 | [defect_wear_claim.feature](features/defect_wear_claim.feature) | Route defect and wear claims to warranty |
 

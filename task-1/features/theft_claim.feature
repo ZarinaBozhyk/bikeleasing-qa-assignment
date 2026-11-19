@@ -14,8 +14,7 @@ Feature: Settle a claim for a stolen bike
 
     @TH-01
     Scenario: Reject a theft claim because the bike was not locked properly
-      # TODO: Clarify what counts as "locked properly" and how it is verified.
-      # Assumption: This scenario checks the reported result only;
+      # Assumption: This scenario checks the reported result only
       # specific lock types and verification methods are outside its scope.
       Given the bike is reported as "stolen"
       And the bike was not locked properly at the time of the theft
@@ -29,7 +28,7 @@ Feature: Settle a claim for a stolen bike
   Rule: An eligible theft claim is approved and a new bike is provided
 
     @TH-02
-    Scenario: Record recovery after a theft claim has been approved and paid
+    Scenario: Approve a covered theft claim and provide a new bike
       Given the bike is reported as "stolen"
       And the bike was locked properly at the time of the theft
       And the theft is covered by insurance
@@ -42,9 +41,17 @@ Feature: Settle a claim for a stolen bike
       And the claim outcome is "Approved"
       And the claim is "paid" by insurance
       And a new bike is provided
+
+  Rule: A stolen bike can still be found after a new bike was provided
+
+    @TH-03
+    Scenario: Record recovery when the stolen bike is found after replacement
+      # The scenario starts from an approved claim, so it does not depend on TH-02.
+      Given the theft claim has the outcome "Approved"
+      And a new bike has been provided
+      When the bike is reported as "found"
+      Then the claim outcome is "Recovered"
       # TODO: Clarify whether payment must be repaid after recovery
       # and who keeps the original and replacement bikes.
       # Assumption: This scenario checks the change to "Recovered" only;
       # repayment and ownership decisions are outside its scope.
-      When the bike is reported as "found"
-      Then the claim outcome is "Recovered"
