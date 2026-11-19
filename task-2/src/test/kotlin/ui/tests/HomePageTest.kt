@@ -16,7 +16,7 @@ import ui.steps.HomePageSteps
 @ExtendWith(SerenityJUnit5Extension::class)
 class HomePageTest {
 
-    @Managed(driver = "chrome")
+    @Managed
     lateinit var browser: WebDriver
 
     @Steps
@@ -40,8 +40,6 @@ class HomePageTest {
         menuName: String,
         expectedItems: List<String>
     ) {
-        browser.manage().window().maximize()
-
         home.openHomePage()
         home.continueWithoutConsent()
         home.openMenu(menuName)

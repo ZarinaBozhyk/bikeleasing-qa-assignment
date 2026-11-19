@@ -1,13 +1,9 @@
 package ui.pages
 
-import net.serenitybdd.annotations.DefaultUrl
 import net.serenitybdd.core.pages.PageObject
 import org.openqa.selenium.By
-import org.openqa.selenium.support.ui.ExpectedConditions.elementToBeClickable
-import org.openqa.selenium.support.ui.ExpectedConditions.invisibilityOfElementLocated
-import org.openqa.selenium.support.ui.ExpectedConditions.visibilityOfElementLocated
+import org.openqa.selenium.support.ui.ExpectedConditions.*
 
-@DefaultUrl("https://www.bikeleasing.de/")
 class HomePage : PageObject() {
 
     private val continueWithoutConsentButton =

@@ -36,8 +36,15 @@ kotlin {
     jvmToolchain(17)
 }
 
+val forwardedPropertyPrefixes = listOf("headless.", "webdriver.", "serenity.", "api.", "environment")
+
 tasks.test {
     useJUnitPlatform()
+    systemProperties(
+        System.getProperties()
+            .mapKeys { it.key.toString() }
+            .filterKeys { key -> forwardedPropertyPrefixes.any { key.startsWith(it) } }
+    )
 
     testLogging {
         events("passed", "skipped", "failed")

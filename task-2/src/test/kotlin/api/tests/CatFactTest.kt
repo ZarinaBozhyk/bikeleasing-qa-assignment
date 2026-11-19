@@ -2,6 +2,7 @@ package api.tests
 
 import api.dto.CatFactsResponseDto
 import api.tasks.FetchCatFactsTask
+import config.TestConfig
 import net.serenitybdd.junit5.SerenityJUnit5Extension
 import net.serenitybdd.screenplay.Actor
 import net.serenitybdd.screenplay.rest.abilities.CallAnApi
@@ -16,7 +17,7 @@ class CatFactTest {
     @Test
     fun `returns five facts with correct length for the first fact`() {
         val user = Actor.named("Ailurophile")
-            .whoCan(CallAnApi.at("https://catfact.ninja"))
+            .whoCan(CallAnApi.at(TestConfig.apiBaseUrl))
 
         user.attemptsTo(FetchCatFactsTask.withLimit(5))
 
