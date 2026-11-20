@@ -28,7 +28,7 @@ jobs:
           cache: gradle
 
       - name: Run tests
-        run: ./gradlew clean test --max-workers=1
+        run: ./gradlew clean test "-Dserenity.outputDirectory=$PWD/target/site/serenity"
 
       # TEMPORARY: find out where Serenity wrote its result files
       - name: Debug - locate Serenity results
@@ -36,8 +36,6 @@ jobs:
         run: |
           echo "=== JSON files in task-2/target/site/serenity ==="
           ls target/site/serenity/*.json 2>/dev/null || echo "none"
-          echo "=== Serenity result files anywhere on the runner ==="
-          find / -name "SERENITY-JUNIT-*.xml" 2>/dev/null | head -20
 
       - name: Upload Serenity report
         if: always()
