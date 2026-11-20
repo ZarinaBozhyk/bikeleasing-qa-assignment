@@ -9,6 +9,7 @@ import net.serenitybdd.screenplay.GivenWhenThen.seeThat
 import net.serenitybdd.screenplay.Question
 import net.serenitybdd.screenplay.rest.abilities.CallAnApi
 import net.serenitybdd.screenplay.rest.questions.LastResponse
+import net.serenitybdd.screenplay.rest.questions.ResponseConsequence.seeThatResponse
 import org.hamcrest.Matchers.equalTo
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -22,6 +23,12 @@ class CatFactTest {
             .whoCan(CallAnApi.at(TestConfig.apiBaseUrl))
 
         user.attemptsTo(FetchCatFactsTask.withLimit(FACT_COUNT))
+
+        user.should(
+            seeThatResponse("the API responds with status 200") { response ->
+                response.statusCode(200)
+            }
+        )
 
         val facts = user.asksFor(LastResponse.received())
             .`as`(CatFactsResponseDto::class.java)
