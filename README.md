@@ -15,4 +15,5 @@ cd task-2
 ```
 
 The Serenity report is generated in `task-2/target/site/serenity/index.html`.
+The latest report from GitHub Actions: https://zarinabozhyk.github.io/bikeleasing-qa-assignment/
 Prerequisites and details are in the [Task 2 README](task-2/README.md).

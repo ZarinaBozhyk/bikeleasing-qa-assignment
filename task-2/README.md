@@ -50,6 +50,17 @@ Useful options:
 ./gradlew clean test --tests "api.tests.CatFactTest"
 ```
 
+## Continuous integration
+
+The workflow [.github/workflows/tests.yml](../.github/workflows/tests.yml) runs the tests on GitHub Actions
+(Ubuntu, JDK 17, headless Chrome). It starts manually: **Actions → Tests → Run workflow**.
+
+After each run the Serenity report is:
+
+- published on GitHub Pages: https://zarinabozhyk.github.io/bikeleasing-qa-assignment/
+- attached to the run as the artifact `serenity-report`.
+
+
 ## Configuration
 
 All run settings are in [src/test/resources/serenity.conf](src/test/resources/serenity.conf).
@@ -100,6 +111,10 @@ task-2/
 - The cookie banner covered page elements; the menu tests close it with "continue without consent".
 - The desktop menu is not visible in a small headless window; the window size is fixed in `serenity.conf`.
 - IntelliJ reported a critical CVE in `jackson-databind`; fixed by updating the Jackson BOM to 2.21.8.
+- In CI the Serenity report was empty at first. Debug logs showed that Serenity wrote the results,
+    but Gradle deleted them as "stale output" right before `aggregate`: an extra `clean` rule had made
+    `target/site/serenity` a Gradle-managed folder. Removing the rule fixed it; `clean` still clears
+    the report through Serenity's `clearReports` task.
 
 ## Known issues
 
@@ -113,6 +128,5 @@ task-2/
 ## Next steps
 
 - Move the UI tests to the Screenplay pattern as well.
-- Run the tests in a CI pipeline (for example GitHub Actions) and publish the Serenity report.
 - Extend the API checks: all facts, different `limit` values, response schema.
 - Add automatic dependency scanning to CI.
