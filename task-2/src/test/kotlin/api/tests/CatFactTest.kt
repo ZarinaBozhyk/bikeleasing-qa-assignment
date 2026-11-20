@@ -5,9 +5,11 @@ import api.tasks.FetchCatFactsTask
 import config.TestConfig
 import net.serenitybdd.junit5.SerenityJUnit5Extension
 import net.serenitybdd.screenplay.Actor
+import net.serenitybdd.screenplay.GivenWhenThen.seeThat
+import net.serenitybdd.screenplay.Question
 import net.serenitybdd.screenplay.rest.abilities.CallAnApi
 import net.serenitybdd.screenplay.rest.questions.LastResponse
-import org.junit.jupiter.api.Assertions
+import org.hamcrest.Matchers.equalTo
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 
@@ -19,15 +21,24 @@ class CatFactTest {
         val user = Actor.named("Ailurophile")
             .whoCan(CallAnApi.at(TestConfig.apiBaseUrl))
 
-        user.attemptsTo(FetchCatFactsTask.withLimit(5))
+        user.attemptsTo(FetchCatFactsTask.withLimit(FACT_COUNT))
 
-        val response = user.asksFor(LastResponse.received())
-        Assertions.assertEquals(200, response.statusCode())
+        val facts = user.asksFor(LastResponse.received())
+            .`as`(CatFactsResponseDto::class.java)
+            .data
+        val firstFact = facts.first()
 
-        val body = response.`as`(CatFactsResponseDto::class.java)
-        Assertions.assertEquals(5, body.data.size)
+        user.should(
+            seeThat("the number of returned facts", Question { facts.size }, equalTo(FACT_COUNT)),
+            seeThat(
+                "the stated length of the first fact",
+                Question { firstFact.length },
+                equalTo(firstFact.fact.length)
+            )
+        )
+    }
 
-        val firstFact = body.data.first()
-        Assertions.assertEquals(firstFact.fact.length, firstFact.length)
+    companion object {
+        private const val FACT_COUNT = 5
     }
 }
