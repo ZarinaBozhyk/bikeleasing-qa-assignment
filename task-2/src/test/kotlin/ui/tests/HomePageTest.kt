@@ -3,8 +3,6 @@ package ui.tests
 import net.serenitybdd.annotations.Managed
 import net.serenitybdd.annotations.Steps
 import net.serenitybdd.junit5.SerenityJUnit5Extension
-import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.junit.jupiter.params.ParameterizedTest
@@ -13,9 +11,11 @@ import org.junit.jupiter.params.provider.MethodSource
 import org.openqa.selenium.WebDriver
 import ui.steps.HomePageSteps
 
+
 @ExtendWith(SerenityJUnit5Extension::class)
 class HomePageTest {
 
+    @Suppress("unused")
     @Managed
     lateinit var browser: WebDriver
 
@@ -25,13 +25,7 @@ class HomePageTest {
     @Test
     fun `opens the Bikeleasing homepage at the correct URL`() {
         home.openHomePage()
-        home.continueWithoutConsent()
-
-        assertEquals(
-            "https://bikeleasing.de/",
-            home.currentUrl(),
-            "Unexpected URL after opening the Bikeleasing homepage"
-        )
+        home.shouldBeOn(EXPECTED_ORIGIN)
     }
 
     @ParameterizedTest(name = "{0} menu contains its expected links")
@@ -44,15 +38,12 @@ class HomePageTest {
         home.continueWithoutConsent()
         home.openMenu(menuName)
 
-        val actualItems = home.menuItems(menuName)
-
-        assertTrue(
-            actualItems.containsAll(expectedItems),
-            "Menu '$menuName': expected $expectedItems, but found $actualItems"
-        )
+        home.shouldShowMenuItems(menuName, expectedItems)
     }
 
     companion object {
+
+        private const val EXPECTED_ORIGIN = "https://bikeleasing.de"
 
         @JvmStatic
         fun menuCases(): List<Arguments> = listOf(

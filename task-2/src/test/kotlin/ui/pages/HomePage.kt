@@ -2,30 +2,20 @@ package ui.pages
 
 import net.serenitybdd.core.pages.PageObject
 import org.openqa.selenium.By
-import org.openqa.selenium.support.ui.ExpectedConditions.*
+import org.openqa.selenium.support.ui.ExpectedConditions.elementToBeClickable
+import org.openqa.selenium.support.ui.ExpectedConditions.invisibilityOfElementLocated
+import org.openqa.selenium.support.ui.ExpectedConditions.visibilityOfElementLocated
+import java.net.URI
 
 class HomePage : PageObject() {
+
+    // Locators.........................................................................................................
 
     private val continueWithoutConsentButton =
         By.xpath("//button[@data-testid='actionButton-reject']")
 
-    fun continueWithoutConsent() {
-        waitFor(
-            elementToBeClickable(continueWithoutConsentButton)
-        ).click()
-
-        waitFor(
-            invisibilityOfElementLocated(continueWithoutConsentButton)
-        )
-    }
-
-    fun currentUrl(): String {
-        val actualUrl = driver.currentUrl
-
-        return checkNotNull(actualUrl) {
-            "The browser did not return a current URL. Actual value: $actualUrl"
-        }
-    }
+    private val dropdownLinks =
+        By.xpath("./li/a")
 
     private fun menuButton(menuName: String): By =
         By.xpath(
@@ -45,6 +35,19 @@ class HomePage : PageObject() {
         return By.id(dropdownId)
     }
 
+    // Actions..........................................................................................................
+
+    fun continueWithoutConsent() {
+        waitFor(
+            elementToBeClickable(continueWithoutConsentButton)
+        ).click()
+
+        // Wait until the banner is gone, so it does not cover other elements
+        waitFor(
+            invisibilityOfElementLocated(continueWithoutConsentButton)
+        )
+    }
+
     fun openMenu(menuName: String) {
         val button = waitFor(elementToBeClickable(menuButton(menuName)))
 
@@ -55,12 +58,27 @@ class HomePage : PageObject() {
         waitFor(visibilityOfElementLocated(menuDropdown(menuName)))
     }
 
+    // Queries..........................................................................................................
+
+    fun currentUrl(): String {
+        val actualUrl = driver.currentUrl
+
+        return checkNotNull(actualUrl) {
+            "The browser did not return a current URL."
+        }
+    }
+
+    fun currentOrigin(): String {
+        val uri = URI(currentUrl())
+        return "${uri.scheme}://${uri.host}"
+    }
+
     fun menuItems(menuName: String): List<String> {
         val dropdown = waitFor(
             visibilityOfElementLocated(menuDropdown(menuName))
         )
 
-        return dropdown.findElements(By.xpath("./li/a"))
+        return dropdown.findElements(dropdownLinks)
             .filter { it.isDisplayed }
             .map { it.text.trim() }
     }
