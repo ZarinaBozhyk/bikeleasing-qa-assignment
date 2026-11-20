@@ -30,6 +30,17 @@ jobs:
       - name: Run tests
         run: ./gradlew clean test
 
+      # TEMPORARY: find out where Serenity wrote its result files
+      - name: Debug - locate Serenity results
+        if: always()
+        run: |
+          echo "=== Files in task-2/target/site/serenity (first 20) ==="
+          ls -la target/site/serenity | head -20
+          echo "=== Serenity result files anywhere in workspace or home ==="
+          find "$GITHUB_WORKSPACE" "$HOME" -name "SERENITY-JUNIT-*.xml" 2>/dev/null
+          echo "=== JSON files next to them ==="
+          find "$GITHUB_WORKSPACE" "$HOME" -path "*serenity*" -name "*.json" -not -path "*/node_modules/*" 2>/dev/null | head -20
+
       - name: Upload Serenity report
         if: always()
         uses: actions/upload-artifact@v6
