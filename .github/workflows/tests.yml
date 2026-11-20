@@ -28,18 +28,16 @@ jobs:
           cache: gradle
 
       - name: Run tests
-        run: ./gradlew clean test
+        run: ./gradlew clean test --max-workers=1
 
       # TEMPORARY: find out where Serenity wrote its result files
       - name: Debug - locate Serenity results
         if: always()
         run: |
-          echo "=== Files in task-2/target/site/serenity (first 20) ==="
-          ls -la target/site/serenity | head -20
-          echo "=== Serenity result files anywhere in workspace or home ==="
-          find "$GITHUB_WORKSPACE" "$HOME" -name "SERENITY-JUNIT-*.xml" 2>/dev/null
-          echo "=== JSON files next to them ==="
-          find "$GITHUB_WORKSPACE" "$HOME" -path "*serenity*" -name "*.json" -not -path "*/node_modules/*" 2>/dev/null | head -20
+          echo "=== JSON files in task-2/target/site/serenity ==="
+          ls target/site/serenity/*.json 2>/dev/null || echo "none"
+          echo "=== Serenity result files anywhere on the runner ==="
+          find / -name "SERENITY-JUNIT-*.xml" 2>/dev/null | head -20
 
       - name: Upload Serenity report
         if: always()
