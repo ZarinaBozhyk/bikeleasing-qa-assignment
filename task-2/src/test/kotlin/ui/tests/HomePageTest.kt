@@ -10,7 +10,7 @@ import org.junit.jupiter.params.provider.Arguments
 import org.junit.jupiter.params.provider.MethodSource
 import org.openqa.selenium.WebDriver
 import ui.steps.HomePageSteps
-
+import java.util.stream.Stream
 
 @ExtendWith(SerenityJUnit5Extension::class)
 class HomePageTest {
@@ -42,11 +42,10 @@ class HomePageTest {
     }
 
     companion object {
-
         private const val EXPECTED_ORIGIN = "https://bikeleasing.de"
 
         @JvmStatic
-        fun menuCases(): List<Arguments> = listOf(
+        fun menuCases(): Stream<Arguments> = Stream.of(
             Arguments.of(
                 "Arbeitgeber",
                 listOf(
