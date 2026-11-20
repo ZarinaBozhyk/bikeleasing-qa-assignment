@@ -3,9 +3,6 @@ plugins {
     id("net.serenity-bdd.serenity-gradle-plugin") version "5.4.2"
 }
 
-group = "org.example"
-version = "1.0-SNAPSHOT"
-
 repositories {
     mavenCentral()
 }
@@ -23,13 +20,11 @@ dependencies {
     testImplementation("net.serenity-bdd:serenity-screenplay:${serenityVersion}")
     testImplementation("net.serenity-bdd:serenity-screenplay-rest:${serenityVersion}")
 
-    testImplementation(platform("com.fasterxml.jackson:jackson-bom:2.21.7"))
+    testImplementation(platform("com.fasterxml.jackson:jackson-bom:2.21.8"))
     testImplementation("com.fasterxml.jackson.module:jackson-module-kotlin")
     testImplementation(kotlin("reflect"))
 
     testRuntimeOnly("org.slf4j:slf4j-simple:2.0.17")
-
-    testImplementation("net.serenity-bdd:serenity-screenplay-webdriver:${serenityVersion}")
 }
 
 kotlin {
