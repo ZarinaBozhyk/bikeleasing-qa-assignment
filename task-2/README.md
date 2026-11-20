@@ -91,6 +91,8 @@ task-2/
   I used the recommended Screenplay pattern for the smaller API part to learn it.
 - **URL check by origin.** The test compares `https://bikeleasing.de` (scheme and host), not the full URL,
   so a trailing slash or query parameters do not break it.
+- - **Jackson for typed DTOs.** RestAssured inside Serenity REST maps JSON with Jackson;
+    Kotlin data classes need the Jackson Kotlin module. Alternative without it: `jsonPath()`.
 
 ## Approach and notes
 
