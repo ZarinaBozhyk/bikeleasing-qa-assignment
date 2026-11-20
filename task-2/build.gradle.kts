@@ -53,7 +53,3 @@ tasks.test {
 tasks.named("aggregate") {
     outputs.upToDateWhen { false }
 }
-
-tasks.named<Delete>("clean") {
-    delete(layout.projectDirectory.dir("target/site/serenity"))
-}

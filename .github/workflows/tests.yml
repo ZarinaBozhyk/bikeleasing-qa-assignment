@@ -27,42 +27,8 @@ jobs:
           java-version: '17'
           cache: gradle
 
-      # TEMPORARY: write Serenity and JUnit logs to files, because Gradle hides
-      # anything printed after the last test finishes (where Serenity writes its results)
       - name: Run tests
-        env:
-          JAVA_TOOL_OPTIONS: >-
-            -Dorg.slf4j.simpleLogger.logFile=/tmp/serenity-debug.log
-            -Dorg.slf4j.simpleLogger.showDateTime=true
-            -Dorg.slf4j.simpleLogger.log.net.serenitybdd.junit5=trace
-            -Dorg.slf4j.simpleLogger.log.net.thucydides.model.reports=debug
-            -Djava.util.logging.config.file=/tmp/jul.properties
-        run: |
-          printf '%s\n' \
-            'handlers=java.util.logging.FileHandler' \
-            'java.util.logging.FileHandler.pattern=/tmp/jul-%u.log' \
-            'java.util.logging.FileHandler.formatter=java.util.logging.SimpleFormatter' \
-            '.level=INFO' > /tmp/jul.properties
-          ./gradlew clean test --info --max-workers=1 "-Dserenity.outputDirectory=$PWD/target/site/serenity"
-
-      # TEMPORARY: show what Serenity did when it tried to write the results
-      - name: Debug - Serenity logs
-        if: always()
-        run: |
-          echo "=== JSON files in task-2/target/site/serenity ==="
-          ls target/site/serenity/*.json 2>/dev/null || echo "none"
-          echo "=== Serenity log: report lines ==="
-          grep -n -i "report\|outcome\|exception\|error" /tmp/serenity-debug.log | tail -100 || echo "no Serenity log"
-          echo "=== JUnit/JUL log: warnings and errors ==="
-          cat /tmp/jul-*.log 2>/dev/null | grep -i -A30 "threw exception\|SEVERE\|WARNING" | head -200 || echo "no JUL log"
-
-      # TEMPORARY: full log files for analysis
-      - name: Upload debug logs
-        if: always()
-        uses: actions/upload-artifact@v6
-        with:
-          name: debug-logs
-          path: /tmp/*.log
+        run: ./gradlew clean test
 
       - name: Upload Serenity report
         if: always()
