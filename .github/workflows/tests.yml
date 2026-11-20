@@ -1,14 +1,17 @@
-# Runs the Task 2 tests on demand ("Run workflow" button in the Actions tab)
 name: Tests
 
 on:
-  workflow_dispatch:   # manual start only, no automatic runs on push
+  workflow_dispatch:   # manual start only
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
 
 jobs:
   test:
     runs-on: ubuntu-latest
 
-    # All commands run inside the Gradle project folder
     defaults:
       run:
         working-directory: task-2
@@ -24,15 +27,32 @@ jobs:
           java-version: '17'
           cache: gradle
 
-      # Chrome is preinstalled on GitHub's Ubuntu runners;
-      # headless mode comes from serenity.conf
       - name: Run tests
         run: ./gradlew clean test
 
-      # Upload the report even when tests fail
       - name: Upload Serenity report
         if: always()
         uses: actions/upload-artifact@v6
         with:
           name: serenity-report
           path: task-2/target/site/serenity
+
+      - name: Upload report for GitHub Pages
+        if: always()
+        uses: actions/upload-pages-artifact@v4
+        with:
+          path: task-2/target/site/serenity
+
+  publish:
+    needs: test
+    if: ${{ !cancelled() }}
+    runs-on: ubuntu-latest
+
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    steps:
+      - name: Publish report to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
